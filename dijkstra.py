@@ -17,9 +17,10 @@ def find_shortest_path(graph_tuple):
             if temp_graph[i][j] == -1:
                 graph[i][j] = -1
 
+    # prep information to be packed into data tuple
     end_point = graph_tuple[2]
     current_point = graph_tuple[1]
-    shortest_distance = float("inf") # -1 for does not exist
+    shortest_distance = float("inf")
     path = [current_point]
     shortest_paths = []
     data = Data(graph, end_point, current_point, shortest_distance, path, shortest_paths)
@@ -48,8 +49,11 @@ def __calculate_distance(data):
     if __not_shortest_path(distance, shortest_distance, current_point, end_point):
         return graph, shortest_distance, shortest_paths
 
+    # Potential points to visit
     new_points = [Point(current_point.x+1, current_point.y), Point(current_point.x-1, current_point.y),
                   Point(current_point.x, current_point.y+1), Point(current_point.x, current_point.y-1)]
+
+    # Depth first search
     for point in new_points:
         if __valid_point(point, graph, path):
             value = graph[point.x][point.y]
