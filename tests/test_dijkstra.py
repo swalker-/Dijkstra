@@ -1,9 +1,9 @@
 __author__ = 'Stephen'
 
 import unittest
-from bfs import *
+from dijkstra import *
 
-class TestBFS(unittest.TestCase):
+class TestDijkstra(unittest.TestCase):
 
     def test_cases(self):
         graph0 = [[0, 0, 0, 0, 0],
