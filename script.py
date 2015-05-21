@@ -70,11 +70,11 @@ graph_info_list = [(graph0, start, end), (graph1, start, end), (graph2, start, e
                    (graph0, start2, end), (graph1, start2, end), (graph2, start2, end),
                    (graph3, start2, end), (graph4, start2, end2), (graph5, start, end3)]
 for graph_info in graph_info_list:
-    result = dijkstra.find_shortest_path(graph_info)
+    result = dijkstra.find_shortest_path(graph_info, 5)
 
     new_graph = result[0]
     shortest_distance = result[1]
-    # shortest_paths = result[2]
+    shortest_paths = result[2]
 
     print("Start point: ", graph_info[1])
     print("End point: ", graph_info[2])
@@ -92,12 +92,12 @@ for graph_info in graph_info_list:
     print()
     print("shortest distance: ", shortest_distance)
     print()
-    # print("# of paths: ", len(shortest_paths))
-    # if len(shortest_paths) > 10:
-    #    print("(not displayed)")
-    # else:
-    #     for p in shortest_paths:
-    #         print(p)
-    #         print()
+    print("# of paths: ", len(shortest_paths))
+    if len(shortest_paths) > 10:
+        print("(not displayed)")
+    else:
+        for p in shortest_paths:
+            print(p)
+            print()
     print("--------------------")
     print()

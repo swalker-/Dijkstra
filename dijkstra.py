@@ -3,10 +3,11 @@ __author__ = 'Stephen'
 import collections
 
 Point = collections.namedtuple('Point', ['x', 'y'])
-Data = collections.namedtuple('Data', ['graph', 'end_point', 'current_point', 'shortest_distance', 'path'])
+GraphData = collections.namedtuple('GraphData', ['graph', 'end_point', 'current_point', 'shortest_distance', 'path'])
+PathData = collections.namedtuple('PathData', ['graph', 'start_point', 'current_point', 'path', 'shortest_paths', 'limit'])
 
 # graph_tuple is (2D array, start point, end point)
-def find_shortest_path(graph_tuple):
+def find_shortest_path(graph_tuple, limit = float("inf")):
     temp_graph = graph_tuple[0]
     row = len(temp_graph)
     col = len(temp_graph[0])
@@ -22,9 +23,14 @@ def find_shortest_path(graph_tuple):
     current_point = graph_tuple[1]
     shortest_distance = float("inf")
     path = [current_point]
-    data = Data(graph, end_point, current_point, shortest_distance, path)
-    results = __calculate_distance(data)
+    gdata = GraphData(graph, end_point, current_point, shortest_distance, path)
+    distance_data = __calculate_distance(gdata)
 
+    pdata = PathData(graph, current_point, end_point, [end_point], [], limit)
+    shortest_p = __shortest_paths(pdata)
+
+    # Returns graph, shortest path distance, list of paths
+    results = (distance_data[0], distance_data[1], shortest_p)
     return results
 
 def __calculate_distance(data):
@@ -58,7 +64,7 @@ def __calculate_distance(data):
                 graph[point.y][point.x] = distance+1
                 new_path = path.copy()
                 new_path.append(point)
-                new_data = Data(graph, end_point, point, shortest_distance, new_path)
+                new_data = GraphData(graph, end_point, point, shortest_distance, new_path)
                 graph, shortest_distance = __calculate_distance(new_data)
 
     return graph, shortest_distance
@@ -81,3 +87,30 @@ def __valid_point(point, graph, path):
             return not_repeat_point and valid_position
     return False
 
+def __shortest_paths(data): # graph, current_point, start_point, current_path, paths):
+    graph = data.graph
+    current_point = data.current_point
+    start_point = data.start_point
+    current_path = data.path
+    paths = data.shortest_paths
+    limit = data.limit
+
+    if len(paths) >= limit:
+        return paths
+
+    if current_point == start_point:
+        paths.append(current_path.copy())
+        return paths
+
+    new_points = [Point(current_point.x+1, current_point.y), Point(current_point.x-1, current_point.y),
+                  Point(current_point.x, current_point.y+1), Point(current_point.x, current_point.y-1)]
+
+    for point in new_points:
+        if __valid_point(point, graph, current_path):
+            if graph[current_point.y][current_point.x] == 1+graph[point.y][point.x]:
+                new_path = current_path.copy()
+                new_path.append(point)
+                new_data = PathData(graph, start_point, point, new_path, paths, limit)
+                paths = __shortest_paths(new_data)
+
+    return paths
