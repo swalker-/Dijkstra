@@ -24,11 +24,12 @@ graph2 = [[0,-1, 0, 0, 0],
           [0, 0, 0,-1, 0]]
 start = Point(0,0)
 end = Point(4,4)
-
 start2 = Point(2,2)
+start3 = Point(0,3)
 
 graph_info_list = [(graph0, start, end), (graph1, start, end), (graph2, start, end),
-                   (graph0, start2, end), (graph1, start2, end), (graph2, start2, end)]
+                   (graph0, start2, end), (graph1, start2, end), (graph2, start2, end),
+                   (graph2, start3, end)]
 for graph_info in graph_info_list:
     result = dijkstra.find_shortest_path(graph_info)
 

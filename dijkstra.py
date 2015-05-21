@@ -29,6 +29,9 @@ def __calculate_distance(data):
     path = data.path
     distance = graph[current_point.x][current_point.y]
 
+    if shortest_distance != -1 and distance > shortest_distance:
+        return graph, shortest_distance
+
     if current_point == end_point:
         shortest_distance = __shortest_distance(distance, shortest_distance)
         return graph, shortest_distance
