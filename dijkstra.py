@@ -3,7 +3,7 @@ __author__ = 'Stephen'
 import collections
 
 Point = collections.namedtuple('Point', ['x', 'y'])
-Data = collections.namedtuple('Data', ['graph', 'end_point', 'current_point', 'shortest_distance', 'path', 'shortest_paths'])
+Data = collections.namedtuple('Data', ['graph', 'end_point', 'current_point', 'shortest_distance', 'path'])
 
 # graph_tuple is (2D array, start point, end point)
 def find_shortest_path(graph_tuple):
@@ -11,7 +11,7 @@ def find_shortest_path(graph_tuple):
     row = len(temp_graph)
     col = len(temp_graph[0])
 
-    graph = [[0 for x in range(row)] for x in range(col)]
+    graph = [[0 for x in range(col)] for x in range(row)]
     for i in range(row):
         for j in range(col):
             if temp_graph[i][j] == -1:
@@ -22,9 +22,10 @@ def find_shortest_path(graph_tuple):
     current_point = graph_tuple[1]
     shortest_distance = float("inf")
     path = [current_point]
-    shortest_paths = []
-    data = Data(graph, end_point, current_point, shortest_distance, path, shortest_paths)
-    return __calculate_distance(data)
+    data = Data(graph, end_point, current_point, shortest_distance, path)
+    results = __calculate_distance(data)
+
+    return results
 
 def __calculate_distance(data):
     # unpack data tuple
@@ -33,21 +34,17 @@ def __calculate_distance(data):
     end_point = data.end_point
     shortest_distance = data.shortest_distance
     path = data.path
-    shortest_paths = data.shortest_paths
-    distance = graph[current_point.x][current_point.y]
+    distance = graph[current_point.y][current_point.x]
 
     if current_point == end_point:
-        if distance == shortest_distance:
-            shortest_paths.append(path)
         if distance < shortest_distance:
             shortest_distance = distance
-            shortest_paths = [path]
-        return graph, shortest_distance, shortest_paths
+        return graph, shortest_distance
 
     # If it is impossible for the current path to be shorter than
     # the current shortest path, stop searching
     if __not_shortest_path(distance, shortest_distance, current_point, end_point):
-        return graph, shortest_distance, shortest_paths
+        return graph, shortest_distance
 
     # Potential points to visit
     new_points = [Point(current_point.x+1, current_point.y), Point(current_point.x-1, current_point.y),
@@ -56,15 +53,15 @@ def __calculate_distance(data):
     # Depth first search
     for point in new_points:
         if __valid_point(point, graph, path):
-            value = graph[point.x][point.y]
-            if (value >= distance+1) or (value == 0):
-                graph[point.x][point.y] = distance+1
+            value = graph[point.y][point.x]
+            if (value > distance+1) or (value == 0):
+                graph[point.y][point.x] = distance+1
                 new_path = path.copy()
                 new_path.append(point)
-                new_data = Data(graph, end_point, point, shortest_distance, new_path, shortest_paths)
-                graph, shortest_distance, shortest_paths = __calculate_distance(new_data)
+                new_data = Data(graph, end_point, point, shortest_distance, new_path)
+                graph, shortest_distance = __calculate_distance(new_data)
 
-    return graph, shortest_distance, shortest_paths
+    return graph, shortest_distance
 
 def __not_shortest_path(distance, shortest_distance, current_point, end_point):
     has_shortest_distance = not (shortest_distance == float("inf"))
@@ -77,10 +74,10 @@ def __best_distance(distance, current_point, end_point):
     return distance+min_movement_x+min_movement_y
 
 def __valid_point(point, graph, path):
-    if (point.x >= 0) and (point.x < len(graph)):
-        if (point.y >= 0) and (point.y < len(graph[0])):
+    if (point.x >= 0) and (point.x < len(graph[0])):
+        if (point.y >= 0) and (point.y < len(graph)):
             not_repeat_point = not (path.__contains__(point))
-            valid_position = (graph[point.x][point.y] != -1)
+            valid_position = (graph[point.y][point.x] != -1)
             return not_repeat_point and valid_position
     return False
 
