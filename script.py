@@ -38,7 +38,7 @@ for graph_info in graph_info_list:
     print("Start point: ", graph_info[1])
     print("End point: ", graph_info[2])
     print()
-    
+
     for graph in graph_info[0]:
         for i in graph:
             print(repr(i).rjust(2), end=' ')

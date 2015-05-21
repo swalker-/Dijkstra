@@ -2,7 +2,6 @@ __author__ = 'Stephen'
 
 import collections
 
-
 Point = collections.namedtuple('Point', ['x', 'y'])
 Data = collections.namedtuple('Data', ['graph', 'end_point', 'current_point', 'shortest_distance', 'path'])
 
@@ -19,9 +18,9 @@ def find_shortest_path(graph_tuple):
                 graph[i][j] = -1
 
     data = Data(graph, graph_tuple[2], graph_tuple[1], -1, [graph_tuple[1]])
-    return calculate_distance(data)
+    return __calculate_distance(data)
 
-def calculate_distance(data):
+def __calculate_distance(data):
     # unpack data tuple
     graph = data.graph
     current_point = data.current_point
@@ -44,7 +43,7 @@ def calculate_distance(data):
                 new_path = path.copy()
                 new_path.append(point)
                 new_data = Data(graph, end_point, point, shortest_distance, new_path)
-                graph, shortest_distance = calculate_distance(new_data)
+                graph, shortest_distance = __calculate_distance(new_data)
     return graph, shortest_distance
 
 def __valid_point(point, graph, path):
