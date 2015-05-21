@@ -35,13 +35,17 @@ for graph_info in graph_info_list:
     new_graph = result[0]
     shortest_path = result[1]
 
-    for list in graph_info[0]:
-        for i in list:
+    print("Start point: ", graph_info[1])
+    print("End point: ", graph_info[2])
+    print()
+    
+    for graph in graph_info[0]:
+        for i in graph:
             print(repr(i).rjust(2), end=' ')
         print()
     print()
-    for list in new_graph:
-        for i in list:
+    for graph in new_graph:
+        for i in graph:
             print(repr(i).rjust(2), end=' ')
         print()
     print()
